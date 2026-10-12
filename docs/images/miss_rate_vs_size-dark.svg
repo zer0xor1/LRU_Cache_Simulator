@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="380" viewBox="0 0 760 380" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<title id="t">Miss rate vs cache size (original example.trc, LRU, 64 B lines)</title><desc id="d">Line chart of L1 miss rate against cache size from 1 KiB to 1 MiB for direct-mapped, 2-way, 8-way and fully associative caches. Data in docs/data/example_size_assoc.csv.</desc>
+<rect width="760" height="380" rx="10" fill="#141719"/>
+<text x="24.0" y="32.0" font-size="15" fill="#e6e8e9" text-anchor="start" font-weight="600" >Miss rate vs cache size (original example.trc, LRU, 64 B lines)</text>
+<text x="24.0" y="52.0" font-size="12" fill="#b4bbbf" text-anchor="start" font-weight="400" >695,521 reads. Flat until the 1.5 MB working set starts to fit; more ways help most at large sizes.</text>
+<line x1="24" y1="74" x2="42" y2="74" stroke="#3987e5" stroke-width="2" stroke-linecap="round"/>
+<circle cx="33" cy="74" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"/>
+<text x="50.0" y="78.0" font-size="12" fill="#b4bbbf" text-anchor="start" font-weight="400" >direct-mapped</text>
+<line x1="149" y1="74" x2="167" y2="74" stroke="#d95926" stroke-width="2" stroke-linecap="round"/>
+<circle cx="158" cy="74" r="4" fill="#d95926" stroke="#141719" stroke-width="2"/>
+<text x="175.0" y="78.0" font-size="12" fill="#b4bbbf" text-anchor="start" font-weight="400" >2-way</text>
+<line x1="218" y1="74" x2="236" y2="74" stroke="#199e70" stroke-width="2" stroke-linecap="round"/>
+<circle cx="227" cy="74" r="4" fill="#199e70" stroke="#141719" stroke-width="2"/>
+<text x="244.0" y="78.0" font-size="12" fill="#b4bbbf" text-anchor="start" font-weight="400" >8-way</text>
+<line x1="287" y1="74" x2="305" y2="74" stroke="#c98500" stroke-width="2" stroke-linecap="round"/>
+<circle cx="296" cy="74" r="4" fill="#c98500" stroke="#141719" stroke-width="2"/>
+<text x="313.0" y="78.0" font-size="12" fill="#b4bbbf" text-anchor="start" font-weight="400" >fully associative</text>
+<line x1="64.0" y1="328.0" x2="736.0" y2="328.0" stroke="#252a2e" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="56.0" y="332.0" font-size="11" fill="#8a949c" text-anchor="end" font-weight="400" style="font-variant-numeric: tabular-nums">6%</text>
+<line x1="64.0" y1="289.3" x2="736.0" y2="289.3" stroke="#252a2e" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="56.0" y="293.3" font-size="11" fill="#8a949c" text-anchor="end" font-weight="400" style="font-variant-numeric: tabular-nums">8%</text>
+<line x1="64.0" y1="250.7" x2="736.0" y2="250.7" stroke="#252a2e" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="56.0" y="254.7" font-size="11" fill="#8a949c" text-anchor="end" font-weight="400" style="font-variant-numeric: tabular-nums">10%</text>
+<line x1="64.0" y1="212.0" x2="736.0" y2="212.0" stroke="#252a2e" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="56.0" y="216.0" font-size="11" fill="#8a949c" text-anchor="end" font-weight="400" style="font-variant-numeric: tabular-nums">12%</text>
+<line x1="64.0" y1="173.3" x2="736.0" y2="173.3" stroke="#252a2e" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="56.0" y="177.3" font-size="11" fill="#8a949c" text-anchor="end" font-weight="400" style="font-variant-numeric: tabular-nums">14%</text>
+<line x1="64.0" y1="134.7" x2="736.0" y2="134.7" stroke="#252a2e" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="56.0" y="138.7" font-size="11" fill="#8a949c" text-anchor="end" font-weight="400" style="font-variant-numeric: tabular-nums">16%</text>
+<line x1="64.0" y1="96.0" x2="736.0" y2="96.0" stroke="#252a2e" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="56.0" y="100.0" font-size="11" fill="#8a949c" text-anchor="end" font-weight="400" style="font-variant-numeric: tabular-nums">18%</text>
+<line x1="64.0" y1="328.0" x2="736.0" y2="328.0" stroke="#3a4147" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="64.0" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >1K</text>
+<text x="131.2" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >2K</text>
+<text x="198.4" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >4K</text>
+<text x="265.6" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >8K</text>
+<text x="332.8" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >16K</text>
+<text x="400.0" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >32K</text>
+<text x="467.2" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >64K</text>
+<text x="534.4" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >128K</text>
+<text x="601.6" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >256K</text>
+<text x="668.8" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >512K</text>
+<text x="736.0" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >1M</text>
+<text x="400.0" y="370.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >cache size (bytes)</text>
+<text x="16.0" y="212.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" transform="rotate(-90 16 212.0)">miss rate (axis starts at 6%)</text>
+<polyline points="64.0,137.6 131.2,139.7 198.4,142.1 265.6,144.3 332.8,146.5 400.0,148.5 467.2,150.6 534.4,162.6 601.6,183.9 668.8,223.8 736.0,273.4" fill="none" stroke="#3987e5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="64.0" cy="137.6" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>direct-mapped, 1K: 15.85%</title></circle>
+<circle cx="131.2" cy="139.7" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>direct-mapped, 2K: 15.74%</title></circle>
+<circle cx="198.4" cy="142.1" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>direct-mapped, 4K: 15.61%</title></circle>
+<circle cx="265.6" cy="144.3" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>direct-mapped, 8K: 15.50%</title></circle>
+<circle cx="332.8" cy="146.5" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>direct-mapped, 16K: 15.39%</title></circle>
+<circle cx="400.0" cy="148.5" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>direct-mapped, 32K: 15.29%</title></circle>
+<circle cx="467.2" cy="150.6" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>direct-mapped, 64K: 15.17%</title></circle>
+<circle cx="534.4" cy="162.6" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>direct-mapped, 128K: 14.55%</title></circle>
+<circle cx="601.6" cy="183.9" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>direct-mapped, 256K: 13.45%</title></circle>
+<circle cx="668.8" cy="223.8" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>direct-mapped, 512K: 11.39%</title></circle>
+<circle cx="736.0" cy="273.4" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>direct-mapped, 1M: 8.82%</title></circle>
+<polyline points="64.0,148.3 131.2,150.1 198.4,152.8 265.6,155.7 332.8,158.4 400.0,161.1 467.2,163.9 534.4,166.8 601.6,186.0 668.8,226.9 736.0,290.1" fill="none" stroke="#d95926" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="64.0" cy="148.3" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>2-way, 1K: 15.29%</title></circle>
+<circle cx="131.2" cy="150.1" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>2-way, 2K: 15.20%</title></circle>
+<circle cx="198.4" cy="152.8" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>2-way, 4K: 15.06%</title></circle>
+<circle cx="265.6" cy="155.7" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>2-way, 8K: 14.91%</title></circle>
+<circle cx="332.8" cy="158.4" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>2-way, 16K: 14.77%</title></circle>
+<circle cx="400.0" cy="161.1" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>2-way, 32K: 14.63%</title></circle>
+<circle cx="467.2" cy="163.9" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>2-way, 64K: 14.49%</title></circle>
+<circle cx="534.4" cy="166.8" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>2-way, 128K: 14.34%</title></circle>
+<circle cx="601.6" cy="186.0" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>2-way, 256K: 13.34%</title></circle>
+<circle cx="668.8" cy="226.9" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>2-way, 512K: 11.23%</title></circle>
+<circle cx="736.0" cy="290.1" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>2-way, 1M: 7.96%</title></circle>
+<polyline points="64.0,149.6 131.2,151.7 198.4,154.0 265.6,156.5 332.8,159.8 400.0,162.6 467.2,166.2 534.4,174.0 601.6,196.6 668.8,238.0 736.0,307.3" fill="none" stroke="#199e70" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="64.0" cy="149.6" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>8-way, 1K: 15.23%</title></circle>
+<circle cx="131.2" cy="151.7" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>8-way, 2K: 15.12%</title></circle>
+<circle cx="198.4" cy="154.0" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>8-way, 4K: 15.00%</title></circle>
+<circle cx="265.6" cy="156.5" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>8-way, 8K: 14.87%</title></circle>
+<circle cx="332.8" cy="159.8" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>8-way, 16K: 14.70%</title></circle>
+<circle cx="400.0" cy="162.6" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>8-way, 32K: 14.56%</title></circle>
+<circle cx="467.2" cy="166.2" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>8-way, 64K: 14.37%</title></circle>
+<circle cx="534.4" cy="174.0" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>8-way, 128K: 13.97%</title></circle>
+<circle cx="601.6" cy="196.6" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>8-way, 256K: 12.80%</title></circle>
+<circle cx="668.8" cy="238.0" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>8-way, 512K: 10.65%</title></circle>
+<circle cx="736.0" cy="307.3" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>8-way, 1M: 7.07%</title></circle>
+<polyline points="64.0,149.8 131.2,151.6 198.4,154.1 265.6,157.7 332.8,160.1 400.0,163.1 467.2,167.3 534.4,178.4 601.6,201.8 668.8,238.3 736.0,300.8" fill="none" stroke="#c98500" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="64.0" cy="149.8" r="4" fill="#c98500" stroke="#141719" stroke-width="2"><title>fully associative, 1K: 15.22%</title></circle>
+<circle cx="131.2" cy="151.6" r="4" fill="#c98500" stroke="#141719" stroke-width="2"><title>fully associative, 2K: 15.12%</title></circle>
+<circle cx="198.4" cy="154.1" r="4" fill="#c98500" stroke="#141719" stroke-width="2"><title>fully associative, 4K: 14.99%</title></circle>
+<circle cx="265.6" cy="157.7" r="4" fill="#c98500" stroke="#141719" stroke-width="2"><title>fully associative, 8K: 14.81%</title></circle>
+<circle cx="332.8" cy="160.1" r="4" fill="#c98500" stroke="#141719" stroke-width="2"><title>fully associative, 16K: 14.68%</title></circle>
+<circle cx="400.0" cy="163.1" r="4" fill="#c98500" stroke="#141719" stroke-width="2"><title>fully associative, 32K: 14.53%</title></circle>
+<circle cx="467.2" cy="167.3" r="4" fill="#c98500" stroke="#141719" stroke-width="2"><title>fully associative, 64K: 14.31%</title></circle>
+<circle cx="534.4" cy="178.4" r="4" fill="#c98500" stroke="#141719" stroke-width="2"><title>fully associative, 128K: 13.74%</title></circle>
+<circle cx="601.6" cy="201.8" r="4" fill="#c98500" stroke="#141719" stroke-width="2"><title>fully associative, 256K: 12.53%</title></circle>
+<circle cx="668.8" cy="238.3" r="4" fill="#c98500" stroke="#141719" stroke-width="2"><title>fully associative, 512K: 10.64%</title></circle>
+<circle cx="736.0" cy="300.8" r="4" fill="#c98500" stroke="#141719" stroke-width="2"><title>fully associative, 1M: 7.41%</title></circle>
+</svg>

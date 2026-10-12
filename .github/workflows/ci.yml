@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.os }} / ${{ matrix.cxx }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, cxx: g++ }
+          - { os: ubuntu-latest, cxx: clang++ }
+          - { os: macos-latest, cxx: clang++ }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCACHESIM_WERROR=ON -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
+      - name: Build
+        run: cmake --build build -j 4
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  sanitizers:
+    name: ASan + UBSan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCACHESIM_SANITIZE=ON -DCACHESIM_WERROR=ON
+      - run: cmake --build build -j 4
+      - run: ctest --test-dir build --output-on-failure
+
+  web-engine:
+    name: JavaScript engine matches C++
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCACHESIM_BUILD_TESTS=OFF
+      - run: cmake --build build -j 4
+      - run: node web/test/crosscheck.mjs build/cachesim
+
+  windows:
+    name: windows / MSVC (best effort)
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S . -B build
+      - run: cmake --build build --config Release
+      - run: ctest --test-dir build -C Release --output-on-failure

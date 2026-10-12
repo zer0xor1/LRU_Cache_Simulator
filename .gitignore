@@ -1,0 +1,18 @@
+build/
+build-*/
+cmake-build-*/
+.vscode/
+.idea/
+*.o
+*.obj
+*.exe
+/cachesim
+/tracegen
+compile_commands.json
+__pycache__/
+node_modules/
+.DS_Store
+
+# Personal notes, kept out of the public repo
+docs/INTERVIEW_NOTES.md
+portfolio/

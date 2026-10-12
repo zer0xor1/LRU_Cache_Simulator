@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="380" viewBox="0 0 760 380" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<title id="t">Matrix multiply 64x64 (doubles): same math, very different miss rates</title><desc id="d">Line chart, log scale: naive i-j-k matrix multiply misses about 50% until the cache holds a full matrix; i-k-j order misses about 4%; 8x8 tiling about 1%. Data in docs/data/matmul_tiling.csv.</desc>
+<rect width="760" height="380" rx="10" fill="#141719"/>
+<text x="24.0" y="32.0" font-size="15" fill="#e6e8e9" text-anchor="start" font-weight="600" >Matrix multiply 64x64 (doubles): same math, very different miss rates</text>
+<text x="24.0" y="52.0" font-size="12" fill="#b4bbbf" text-anchor="start" font-weight="400" >8-way LRU L1, 64 B lines, synthetic traces from tracegen. Log scale.</text>
+<line x1="24" y1="74" x2="42" y2="74" stroke="#3987e5" stroke-width="2" stroke-linecap="round"/>
+<circle cx="33" cy="74" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"/>
+<text x="50.0" y="78.0" font-size="12" fill="#b4bbbf" text-anchor="start" font-weight="400" >naive i-j-k</text>
+<line x1="135" y1="74" x2="153" y2="74" stroke="#d95926" stroke-width="2" stroke-linecap="round"/>
+<circle cx="144" cy="74" r="4" fill="#d95926" stroke="#141719" stroke-width="2"/>
+<text x="161.0" y="78.0" font-size="12" fill="#b4bbbf" text-anchor="start" font-weight="400" >loop order i-k-j</text>
+<line x1="281" y1="74" x2="299" y2="74" stroke="#199e70" stroke-width="2" stroke-linecap="round"/>
+<circle cx="290" cy="74" r="4" fill="#199e70" stroke="#141719" stroke-width="2"/>
+<text x="307.0" y="78.0" font-size="12" fill="#b4bbbf" text-anchor="start" font-weight="400" >tiled 8x8</text>
+<line x1="64.0" y1="328.0" x2="736.0" y2="328.0" stroke="#252a2e" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="56.0" y="332.0" font-size="11" fill="#8a949c" text-anchor="end" font-weight="400" style="font-variant-numeric: tabular-nums">0.1%</text>
+<line x1="64.0" y1="250.7" x2="736.0" y2="250.7" stroke="#252a2e" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="56.0" y="254.7" font-size="11" fill="#8a949c" text-anchor="end" font-weight="400" style="font-variant-numeric: tabular-nums">1%</text>
+<line x1="64.0" y1="173.3" x2="736.0" y2="173.3" stroke="#252a2e" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="56.0" y="177.3" font-size="11" fill="#8a949c" text-anchor="end" font-weight="400" style="font-variant-numeric: tabular-nums">10%</text>
+<line x1="64.0" y1="96.0" x2="736.0" y2="96.0" stroke="#252a2e" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="56.0" y="100.0" font-size="11" fill="#8a949c" text-anchor="end" font-weight="400" style="font-variant-numeric: tabular-nums">100%</text>
+<line x1="64.0" y1="328.0" x2="736.0" y2="328.0" stroke="#3a4147" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="64.0" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >2K</text>
+<text x="198.4" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >4K</text>
+<text x="332.8" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >8K</text>
+<text x="467.2" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >16K</text>
+<text x="601.6" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >32K</text>
+<text x="736.0" y="346.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >64K</text>
+<text x="400.0" y="370.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" >L1 size (bytes)</text>
+<text x="16.0" y="212.0" font-size="11" fill="#8a949c" text-anchor="middle" font-weight="400" transform="rotate(-90 16 212.0)">miss rate (log scale)</text>
+<polyline points="64.0,118.3 198.4,118.9 332.8,118.9 467.2,118.9 601.6,183.7 736.0,292.2" fill="none" stroke="#3987e5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="64.0" cy="118.3" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>naive i-j-k, 2K: 51.45%</title></circle>
+<circle cx="198.4" cy="118.9" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>naive i-j-k, 4K: 50.63%</title></circle>
+<circle cx="332.8" cy="118.9" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>naive i-j-k, 8K: 50.62%</title></circle>
+<circle cx="467.2" cy="118.9" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>naive i-j-k, 16K: 50.57%</title></circle>
+<circle cx="601.6" cy="183.7" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>naive i-j-k, 32K: 7.35%</title></circle>
+<circle cx="736.0" cy="292.2" r="4" fill="#3987e5" stroke="#141719" stroke-width="2"><title>naive i-j-k, 64K: 0.29%</title></circle>
+<polyline points="64.0,201.9 198.4,201.9 332.8,201.9 467.2,201.9 601.6,243.7 736.0,305.7" fill="none" stroke="#d95926" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="64.0" cy="201.9" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>loop order i-k-j, 2K: 4.27%</title></circle>
+<circle cx="198.4" cy="201.9" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>loop order i-k-j, 4K: 4.27%</title></circle>
+<circle cx="332.8" cy="201.9" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>loop order i-k-j, 8K: 4.27%</title></circle>
+<circle cx="467.2" cy="201.9" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>loop order i-k-j, 16K: 4.27%</title></circle>
+<circle cx="601.6" cy="243.7" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>loop order i-k-j, 32K: 1.23%</title></circle>
+<circle cx="736.0" cy="305.7" r="4" fill="#d95926" stroke="#141719" stroke-width="2"><title>loop order i-k-j, 64K: 0.19%</title></circle>
+<polyline points="64.0,165.4 198.4,186.8 332.8,250.4 467.2,251.5 601.6,254.6 736.0,295.9" fill="none" stroke="#199e70" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="64.0" cy="165.4" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>tiled 8x8, 2K: 12.68%</title></circle>
+<circle cx="198.4" cy="186.8" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>tiled 8x8, 4K: 6.70%</title></circle>
+<circle cx="332.8" cy="250.4" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>tiled 8x8, 8K: 1.01%</title></circle>
+<circle cx="467.2" cy="251.5" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>tiled 8x8, 16K: 0.98%</title></circle>
+<circle cx="601.6" cy="254.6" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>tiled 8x8, 32K: 0.89%</title></circle>
+<circle cx="736.0" cy="295.9" r="4" fill="#199e70" stroke="#141719" stroke-width="2"><title>tiled 8x8, 64K: 0.26%</title></circle>
+<text x="340.8" y="108.9" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" >naive i-j-k 50.6%</text>
+<text x="340.8" y="191.9" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" >loop order i-k-j 4.3%</text>
+<text x="475.2" y="269.5" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" >tiled 8x8 1.0%</text>
+</svg>

@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="480" viewBox="0 0 760 480" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<title id="t">Replacement policies: miss rate on an 8 KiB, 4-way cache</title><desc id="d">Four small bar charts comparing LRU, FIFO, Random, tree PLRU, SRRIP and OPT miss rates. LRU thrashes on a loop slightly larger than the cache; SRRIP wins on hot/cold data. Data in docs/data/policies.csv.</desc>
+<rect width="760" height="480" rx="10" fill="#141719"/>
+<text x="24.0" y="32.0" font-size="15" fill="#e6e8e9" text-anchor="start" font-weight="600" >Replacement policies: miss rate on an 8 KiB, 4-way cache</text>
+<text x="24.0" y="52.0" font-size="12" fill="#b4bbbf" text-anchor="start" font-weight="400" >OPT (Belady) is the lower bound. Shorter is better.</text>
+<text x="24.0" y="94.0" font-size="13" fill="#e6e8e9" text-anchor="start" font-weight="600" >Loop 25% larger than cache</text>
+<text x="24.0" y="110.0" font-size="11" fill="#8a949c" text-anchor="start" font-weight="400" >10 KiB array scanned 50 times</text>
+<line x1="82.0" y1="120.0" x2="82.0" y2="264.0" stroke="#3a4147" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="74.0" y="136.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >LRU</text>
+<path d="M82.0,124.0 H308.0 Q312.0,124.0 312.0,128.0 V136.0 Q312.0,140.0 308.0,140.0 H82.0 Z" fill="#3987e5"><title>Loop 25% larger than cache: LRU 100.00%</title></path>
+<text x="318.0" y="136.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">100.0%</text>
+<text x="74.0" y="160.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >FIFO</text>
+<path d="M82.0,148.0 H308.0 Q312.0,148.0 312.0,152.0 V160.0 Q312.0,164.0 308.0,164.0 H82.0 Z" fill="#3987e5"><title>Loop 25% larger than cache: FIFO 100.00%</title></path>
+<text x="318.0" y="160.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">100.0%</text>
+<text x="74.0" y="184.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >RANDOM</text>
+<path d="M82.0,172.0 H173.6 Q177.6,172.0 177.6,176.0 V184.0 Q177.6,188.0 173.6,188.0 H82.0 Z" fill="#3987e5"><title>Loop 25% larger than cache: RANDOM 41.58%</title></path>
+<text x="183.6" y="184.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">41.6%</text>
+<text x="74.0" y="208.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >PLRU</text>
+<path d="M82.0,196.0 H307.1 Q311.1,196.0 311.1,200.0 V208.0 Q311.1,212.0 307.1,212.0 H82.0 Z" fill="#3987e5"><title>Loop 25% larger than cache: PLRU 99.60%</title></path>
+<text x="317.1" y="208.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">99.6%</text>
+<text x="74.0" y="232.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >SRRIP</text>
+<path d="M82.0,220.0 H308.0 Q312.0,220.0 312.0,224.0 V232.0 Q312.0,236.0 308.0,236.0 H82.0 Z" fill="#3987e5"><title>Loop 25% larger than cache: SRRIP 100.00%</title></path>
+<text x="318.0" y="232.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">100.0%</text>
+<text x="74.0" y="256.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >OPT</text>
+<path d="M82.0,244.0 H138.7 Q142.7,244.0 142.7,248.0 V256.0 Q142.7,260.0 138.7,260.0 H82.0 Z" fill="#3987e5"><title>Loop 25% larger than cache: OPT 26.40%</title></path>
+<text x="148.7" y="256.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">26.4%</text>
+<text x="396.0" y="94.0" font-size="13" fill="#e6e8e9" text-anchor="start" font-weight="600" >Hot set + random cold data</text>
+<text x="396.0" y="110.0" font-size="11" fill="#8a949c" text-anchor="start" font-weight="400" >80% of reads in 6 KiB, rest in 1 MiB</text>
+<line x1="454.0" y1="120.0" x2="454.0" y2="264.0" stroke="#3a4147" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="446.0" y="136.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >LRU</text>
+<path d="M454.0,124.0 H633.2 Q637.2,124.0 637.2,128.0 V136.0 Q637.2,140.0 633.2,140.0 H454.0 Z" fill="#3987e5"><title>Hot set + random cold data: LRU 31.29%</title></path>
+<text x="643.2" y="136.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">31.3%</text>
+<text x="446.0" y="160.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >FIFO</text>
+<path d="M454.0,148.0 H680.0 Q684.0,148.0 684.0,152.0 V160.0 Q684.0,164.0 680.0,164.0 H454.0 Z" fill="#3987e5"><title>Hot set + random cold data: FIFO 39.28%</title></path>
+<text x="690.0" y="160.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">39.3%</text>
+<text x="446.0" y="184.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >RANDOM</text>
+<path d="M454.0,172.0 H680.0 Q684.0,172.0 684.0,176.0 V184.0 Q684.0,188.0 680.0,188.0 H454.0 Z" fill="#3987e5"><title>Hot set + random cold data: RANDOM 39.27%</title></path>
+<text x="690.0" y="184.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">39.3%</text>
+<text x="446.0" y="208.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >PLRU</text>
+<path d="M454.0,196.0 H639.4 Q643.4,196.0 643.4,200.0 V208.0 Q643.4,212.0 639.4,212.0 H454.0 Z" fill="#3987e5"><title>Hot set + random cold data: PLRU 32.34%</title></path>
+<text x="649.4" y="208.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">32.3%</text>
+<text x="446.0" y="232.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >SRRIP</text>
+<path d="M454.0,220.0 H587.8 Q591.8,220.0 591.8,224.0 V232.0 Q591.8,236.0 587.8,236.0 H454.0 Z" fill="#3987e5"><title>Hot set + random cold data: SRRIP 23.53%</title></path>
+<text x="597.8" y="232.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">23.5%</text>
+<text x="446.0" y="256.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >OPT</text>
+<path d="M454.0,244.0 H568.1 Q572.1,244.0 572.1,248.0 V256.0 Q572.1,260.0 568.1,260.0 H454.0 Z" fill="#3987e5"><title>Hot set + random cold data: OPT 20.16%</title></path>
+<text x="578.1" y="256.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">20.2%</text>
+<text x="24.0" y="294.0" font-size="13" fill="#e6e8e9" text-anchor="start" font-weight="600" >Real program (Valgrind)</text>
+<text x="24.0" y="310.0" font-size="11" fill="#8a949c" text-anchor="start" font-weight="400" >sum_matrix.c, row then column walk</text>
+<line x1="82.0" y1="320.0" x2="82.0" y2="464.0" stroke="#3a4147" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="74.0" y="336.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >LRU</text>
+<path d="M82.0,324.0 H303.2 Q307.2,324.0 307.2,328.0 V336.0 Q307.2,340.0 303.2,340.0 H82.0 Z" fill="#3987e5"><title>Real program (Valgrind): LRU 19.80%</title></path>
+<text x="313.2" y="336.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">19.8%</text>
+<text x="74.0" y="360.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >FIFO</text>
+<path d="M82.0,348.0 H308.0 Q312.0,348.0 312.0,352.0 V360.0 Q312.0,364.0 308.0,364.0 H82.0 Z" fill="#3987e5"><title>Real program (Valgrind): FIFO 20.22%</title></path>
+<text x="318.0" y="360.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">20.2%</text>
+<text x="74.0" y="384.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >RANDOM</text>
+<path d="M82.0,372.0 H307.9 Q311.9,372.0 311.9,376.0 V384.0 Q311.9,388.0 307.9,388.0 H82.0 Z" fill="#3987e5"><title>Real program (Valgrind): RANDOM 20.22%</title></path>
+<text x="317.9" y="384.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">20.2%</text>
+<text x="74.0" y="408.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >PLRU</text>
+<path d="M82.0,396.0 H303.6 Q307.6,396.0 307.6,400.0 V408.0 Q307.6,412.0 303.6,412.0 H82.0 Z" fill="#3987e5"><title>Real program (Valgrind): PLRU 19.83%</title></path>
+<text x="313.6" y="408.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">19.8%</text>
+<text x="74.0" y="432.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >SRRIP</text>
+<path d="M82.0,420.0 H302.9 Q306.9,420.0 306.9,424.0 V432.0 Q306.9,436.0 302.9,436.0 H82.0 Z" fill="#3987e5"><title>Real program (Valgrind): SRRIP 19.77%</title></path>
+<text x="312.9" y="432.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">19.8%</text>
+<text x="74.0" y="456.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >OPT</text>
+<path d="M82.0,444.0 H287.7 Q291.7,444.0 291.7,448.0 V456.0 Q291.7,460.0 287.7,460.0 H82.0 Z" fill="#3987e5"><title>Real program (Valgrind): OPT 18.43%</title></path>
+<text x="297.7" y="456.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">18.4%</text>
+<text x="396.0" y="294.0" font-size="13" fill="#e6e8e9" text-anchor="start" font-weight="600" >Original example.trc</text>
+<text x="396.0" y="310.0" font-size="11" fill="#8a949c" text-anchor="start" font-weight="400" >695,521 reads from the forked project</text>
+<line x1="454.0" y1="320.0" x2="454.0" y2="464.0" stroke="#3a4147" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="446.0" y="336.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >LRU</text>
+<path d="M454.0,324.0 H676.8 Q680.8,324.0 680.8,328.0 V336.0 Q680.8,340.0 676.8,340.0 H454.0 Z" fill="#3987e5"><title>Original example.trc: LRU 14.88%</title></path>
+<text x="686.8" y="336.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">14.9%</text>
+<text x="446.0" y="360.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >FIFO</text>
+<path d="M454.0,348.0 H677.0 Q681.0,348.0 681.0,352.0 V360.0 Q681.0,364.0 677.0,364.0 H454.0 Z" fill="#3987e5"><title>Original example.trc: FIFO 14.89%</title></path>
+<text x="687.0" y="360.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">14.9%</text>
+<text x="446.0" y="384.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >RANDOM</text>
+<path d="M454.0,372.0 H680.0 Q684.0,372.0 684.0,376.0 V384.0 Q684.0,388.0 680.0,388.0 H454.0 Z" fill="#3987e5"><title>Original example.trc: RANDOM 15.09%</title></path>
+<text x="690.0" y="384.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">15.1%</text>
+<text x="446.0" y="408.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >PLRU</text>
+<path d="M454.0,396.0 H676.7 Q680.7,396.0 680.7,400.0 V408.0 Q680.7,412.0 676.7,412.0 H454.0 Z" fill="#3987e5"><title>Original example.trc: PLRU 14.88%</title></path>
+<text x="686.7" y="408.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">14.9%</text>
+<text x="446.0" y="432.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >SRRIP</text>
+<path d="M454.0,420.0 H676.8 Q680.8,420.0 680.8,424.0 V432.0 Q680.8,436.0 676.8,436.0 H454.0 Z" fill="#3987e5"><title>Original example.trc: SRRIP 14.88%</title></path>
+<text x="686.8" y="432.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">14.9%</text>
+<text x="446.0" y="456.0" font-size="11" fill="#b4bbbf" text-anchor="end" font-weight="400" >OPT</text>
+<path d="M454.0,444.0 H665.0 Q669.0,444.0 669.0,448.0 V456.0 Q669.0,460.0 665.0,460.0 H454.0 Z" fill="#3987e5"><title>Original example.trc: OPT 14.11%</title></path>
+<text x="675.0" y="456.0" font-size="11" fill="#b4bbbf" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">14.1%</text>
+</svg>

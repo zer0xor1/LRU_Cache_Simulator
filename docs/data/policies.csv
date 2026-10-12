@@ -1,0 +1,25 @@
+workload,policy,miss_rate
+Loop 25% larger than cache,LRU,1.0
+Loop 25% larger than cache,FIFO,1.0
+Loop 25% larger than cache,RANDOM,0.41575
+Loop 25% larger than cache,PLRU,0.996
+Loop 25% larger than cache,SRRIP,1.0
+Loop 25% larger than cache,OPT,0.264
+Hot set + random cold data,LRU,0.312905
+Hot set + random cold data,FIFO,0.392755
+Hot set + random cold data,RANDOM,0.392715
+Hot set + random cold data,PLRU,0.32342
+Hot set + random cold data,SRRIP,0.23532
+Hot set + random cold data,OPT,0.201595
+Real program (Valgrind),LRU,0.198002
+Real program (Valgrind),FIFO,0.202214
+Real program (Valgrind),RANDOM,0.202163
+Real program (Valgrind),PLRU,0.198305
+Real program (Valgrind),SRRIP,0.197707
+Real program (Valgrind),OPT,0.184348
+Original example.trc,LRU,0.148783
+Original example.trc,FIFO,0.148936
+Original example.trc,RANDOM,0.150904
+Original example.trc,PLRU,0.14876
+Original example.trc,SRRIP,0.148825
+Original example.trc,OPT,0.141088

@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cache Simulator</title>
+<meta name="description" content="Step through memory accesses and watch a set-associative CPU cache place, hit and evict lines.">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0f1214;
+    --panel: #14181b;
+    --raise: #1a1f23;
+    --line: #242a2f;
+    --line-2: #2f363c;
+    --ink: #dbe0e3;
+    --ink-2: #a2acb3;
+    --muted: #76828a;
+    --tag: #7a9cc0;      /* address fields: quiet, distinct, not loud */
+    --index: #8bab8f;
+    --offset: #bda577;
+    --hit: #8bab8f;
+    --fill: #c4a46e;
+    --evict: #bf7a68;
+    /* 3C bar: validated categorical slots (same as the README charts) */
+    --c-compulsory: #3987e5;
+    --c-capacity: #d95926;
+    --c-conflict: #199e70;
+    --focus: #9cc2e6;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font: 15px/1.5 var(--sans); padding: 28px 16px 40px; }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  header h1 { font-size: 22px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--ink-2); max-width: 64ch; }
+
+  /* ---- controls ---- */
+  .controls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; margin: 22px 0 10px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field > span { font-size: 12px; color: var(--muted); }
+  select, textarea, button { font: inherit; color: var(--ink); }
+  select {
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 6px;
+    padding: 6px 28px 6px 10px; min-height: 36px; appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: right 13px top 15px, right 8px top 15px; background-size: 5px 5px; background-repeat: no-repeat;
+  }
+  .check { display: flex; align-items: center; gap: 8px; min-height: 36px; color: var(--ink-2); font-size: 14px; }
+  .check input { width: 16px; height: 16px; accent-color: var(--tag); }
+  .trace-row { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
+  .trace-note { color: var(--ink-2); font-size: 14px; flex: 1 1 320px; padding-bottom: 7px; max-width: 70ch; }
+  .custom { display: none; margin-top: 10px; }
+  .custom.open { display: block; }
+  textarea {
+    width: 100%; min-height: 110px; background: var(--panel); border: 1px solid var(--line-2); border-radius: 6px;
+    padding: 10px; font: 13px/1.5 var(--mono); resize: vertical;
+  }
+  .custom-actions { display: flex; gap: 10px; align-items: center; margin-top: 8px; color: var(--muted); font-size: 13px; }
+
+  button {
+    background: var(--raise); border: 1px solid var(--line-2); border-radius: 6px; padding: 7px 14px;
+    min-height: 36px; cursor: pointer;
+  }
+  button:hover { border-color: var(--muted); }
+  button:disabled { opacity: 0.45; cursor: default; }
+  button.primary { background: #23303b; border-color: #34495a; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  /* ---- the address strip: the one loud element ---- */
+  .now { margin-top: 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px 16px; }
+  .now-top { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; }
+  .op { font-weight: 600; font-size: 18px; }
+  .addr { font: 600 18px var(--mono); }
+  .counter { color: var(--muted); font-size: 13px; margin-left: auto; }
+  .bits { display: flex; flex-wrap: wrap; gap: 14px; margin: 16px 0 12px; }
+  .group { display: flex; flex-direction: column; gap: 6px; }
+  .group .cells { display: flex; gap: 3px; }
+  .bit {
+    width: 28px; height: 38px; display: grid; place-items: center; border-radius: 4px;
+    font: 600 17px var(--mono); background: var(--raise); border-bottom: 3px solid var(--line-2);
+  }
+  .g-tag .bit { border-bottom-color: var(--tag); }
+  .g-index .bit { border-bottom-color: var(--index); }
+  .g-offset .bit { border-bottom-color: var(--offset); }
+  .group .label { font-size: 13px; color: var(--ink-2); }
+  .group .label b { font: 600 13px var(--mono); color: var(--ink); }
+  .explain { margin: 0; color: var(--ink); max-width: 80ch; min-height: 3em; }
+  .explain .tag-hit { color: var(--hit); font-weight: 600; }
+  .explain .tag-miss { color: var(--fill); font-weight: 600; }
+  .error { color: var(--evict); }
+
+  /* ---- transport ---- */
+  .transport { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0 0; }
+  .speed { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; margin-left: 8px; }
+  .speed input { accent-color: var(--tag); width: 120px; }
+  .keys { color: var(--muted); font-size: 12px; margin-left: auto; }
+
+  /* ---- cache + side panel ---- */
+  .main { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; margin-top: 18px; align-items: start; }
+  .cache { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .cache-head { display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); color: var(--ink-2); font-size: 13px; }
+  .sets { max-height: 520px; overflow: auto; }
+  .set { display: grid; grid-template-columns: 56px minmax(0, 1fr); border-bottom: 1px solid var(--line); }
+  .set:last-child { border-bottom: 0; }
+  .set-id { padding: 10px 0 10px 16px; color: var(--muted); font: 13px var(--mono); }
+  .set-body { padding: 8px 12px 8px 0; }
+  .ways { display: grid; gap: 6px; grid-template-columns: repeat(var(--ways), minmax(86px, 1fr)); }
+  .ways.many { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); }
+  .set.active { background: #182026; }
+  .set.active .set-id { color: var(--ink); }
+  .way {
+    border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; min-height: 48px; background: var(--bg);
+    display: flex; flex-direction: column; justify-content: center; gap: 2px;
+  }
+  .way .t { font: 600 14px var(--mono); display: flex; justify-content: space-between; gap: 6px; }
+  .way .m { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .way.empty .t { color: #4a535a; font-weight: 400; }
+  .dirty { font: 600 10px var(--sans); color: var(--bg); background: var(--fill); border-radius: 3px; padding: 1px 4px; align-self: center; }
+  .way.hit { border-color: var(--hit); box-shadow: inset 0 0 0 1px var(--hit); }
+  .way.filled { border-color: var(--fill); box-shadow: inset 0 0 0 1px var(--fill); }
+  .way.flash { animation: flash 600ms ease-out; }
+  @keyframes flash { from { background: #2a2f2a; } to { background: var(--bg); } }
+  .tree { margin-top: 6px; font-size: 12px; color: var(--muted); }
+  .tree b { font: 600 12px var(--mono); color: var(--ink-2); letter-spacing: 0.08em; }
+
+  aside { display: flex; flex-direction: column; gap: 18px; }
+  .box { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .box h2 { font-size: 14px; font-weight: 600; margin: 0 0 10px; }
+  dl { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; margin: 0; font-size: 14px; }
+  dt { color: var(--ink-2); }
+  dd { margin: 0; font-variant-numeric: tabular-nums; text-align: right; }
+  .threec { display: flex; height: 10px; border-radius: 3px; overflow: hidden; background: var(--raise); gap: 2px; margin: 12px 0 8px; }
+  .threec span { display: block; height: 100%; }
+  .legend { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 8px; font-size: 13px; color: var(--ink-2); align-items: center; }
+  .legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .legend .n { font-variant-numeric: tabular-nums; color: var(--ink); text-align: right; }
+  .log { list-style: none; margin: 0; padding: 0; font-size: 13px; max-height: 260px; overflow: auto; }
+  .log li { display: grid; grid-template-columns: 34px 1fr auto; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--line); }
+  .log li:last-child { border-bottom: 0; }
+  .log .i { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .log .a { font-family: var(--mono); }
+  .log .r-hit { color: var(--hit); }
+  .log .r-miss { color: var(--fill); }
+  .empty-note { color: var(--muted); font-size: 13px; }
+
+  footer { margin-top: 26px; color: var(--muted); font-size: 13px; max-width: 80ch; }
+  footer a { color: var(--ink-2); }
+
+  @media (max-width: 860px) {
+    .main { grid-template-columns: 1fr; }
+    .keys { display: none; }
+  }
+  @media (max-width: 520px) {
+    body { padding: 20px 16px 32px; }
+    .bit { width: 20px; height: 30px; font-size: 14px; }
+    .bits { gap: 10px; }
+    .ways, .ways.many { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
+    .set { grid-template-columns: 40px minmax(0, 1fr); }
+    .set-id { padding-left: 12px; }
+    .counter { margin-left: 0; width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) { .way.flash { animation: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Cache simulator</h1>
+    <p>Step through memory accesses and watch a set-associative cache split each address, look up its set, and decide what to keep.</p>
+  </header>
+
+  <section class="controls" aria-label="Cache configuration">
+    <label class="field"><span>Size</span>
+      <select id="size"><option value="64">64 B</option><option value="128">128 B</option><option value="256" selected>256 B</option><option value="512">512 B</option><option value="1024">1 KiB</option></select></label>
+    <label class="field"><span>Line</span>
+      <select id="block"><option value="8">8 B</option><option value="16" selected>16 B</option><option value="32">32 B</option><option value="64">64 B</option></select></label>
+    <label class="field"><span>Ways</span>
+      <select id="assoc"><option value="1">1 (direct)</option><option value="2" selected>2</option><option value="4">4</option><option value="8">8</option><option value="full">full</option></select></label>
+    <label class="field"><span>Replacement</span>
+      <select id="policy"><option>LRU</option><option>FIFO</option><option value="RANDOM">Random</option><option value="PLRU">Tree PLRU</option><option>SRRIP</option><option value="OPT">OPT (Belady)</option></select></label>
+    <label class="field"><span>Writes</span>
+      <select id="write"><option value="wb">write-back</option><option value="wt">write-through</option></select></label>
+    <label class="check"><input type="checkbox" id="alloc" checked> Allocate on write miss</label>
+  </section>
+
+  <div class="trace-row">
+    <label class="field"><span>Trace</span><select id="preset"></select></label>
+    <p class="trace-note" id="preset-note"></p>
+  </div>
+  <div class="custom" id="custom">
+    <textarea id="custom-text" spellcheck="false" aria-label="Your trace, one access per line"></textarea>
+    <div class="custom-actions"><button id="load-custom">Load trace</button><span>One access per line: <code>R 0x1A4</code>, <code>W 0x80 4</code>, Valgrind Lackey lines, or a bare hex address.</span></div>
+  </div>
+
+  <section class="now" aria-label="Current access">
+    <div class="now-top">
+      <span class="op" id="op">Ready</span>
+      <span class="addr" id="addr"></span>
+      <span class="counter" id="counter"></span>
+    </div>
+    <div class="bits" id="bits" aria-hidden="true"></div>
+    <p class="explain" id="explain" aria-live="polite"></p>
+    <div class="transport">
+      <button id="reset">Reset</button>
+      <button id="back">Back</button>
+      <button id="step" class="primary">Step</button>
+      <button id="play">Play</button>
+      <button id="run">Run to end</button>
+      <label class="speed">Speed <input type="range" id="speed" min="1" max="20" value="4" aria-label="Steps per second"></label>
+      <span class="keys">Keys: right arrow steps, left arrow goes back, space plays</span>
+    </div>
+  </section>
+
+  <div class="main">
+    <section class="cache" aria-label="Cache contents">
+      <div class="cache-head"><span id="geom"></span><span id="state-hint"></span></div>
+      <div class="sets" id="sets"></div>
+    </section>
+    <aside>
+      <div class="box">
+        <h2>Results so far</h2>
+        <dl>
+          <dt>Accesses</dt><dd id="s-acc">0</dd>
+          <dt>Hits</dt><dd id="s-hits">0</dd>
+          <dt>Misses</dt><dd id="s-miss">0</dd>
+          <dt>Hit rate</dt><dd id="s-rate">-</dd>
+          <dt>Write-backs</dt><dd id="s-wb">0</dd>
+          <dt>Memory line reads</dt><dd id="s-mr">0</dd>
+          <dt>Memory writes</dt><dd id="s-mw">0</dd>
+        </dl>
+        <div class="threec" id="threec" role="img" aria-label="Miss breakdown"></div>
+        <div class="legend">
+          <i style="background:var(--c-compulsory)"></i><span title="First use of the line: no cache could avoid it.">Compulsory</span><span class="n" id="s-comp">0</span>
+          <i style="background:var(--c-capacity)"></i><span title="Even a fully associative cache of this size would miss.">Capacity</span><span class="n" id="s-cap">0</span>
+          <i style="background:var(--c-conflict)"></i><span title="A fully associative cache of this size would have hit.">Conflict</span><span class="n" id="s-conf">0</span>
+        </div>
+      </div>
+      <div class="box">
+        <h2>Recent accesses</h2>
+        <ol class="log" id="log" reversed></ol>
+        <p class="empty-note" id="log-empty">Press Step to run the first access.</p>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    The same engine runs in C++ for full traces (multi-level hierarchies, Valgrind traces, design-space sweeps). This page uses a JavaScript port that is checked against the C++ binary on 90 trace and configuration pairs.
+  </footer>
+</div>
+
+<script src="cachesim.js"></script>
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const hex = (n, w) => "0x" + n.toString(16).toUpperCase().padStart(w || 1, "0");
+
+  // ---- preset traces, written for the default 256 B, 16 B line, 2-way cache ----
+  const H = (a) => hex(a, 3);
+  function gen(fn) { const t = []; fn((op, a, s) => t.push(`${op} ${H(a)} ${s || 4}`)); return t.join("\n"); }
+  const PRESETS = [
+    { id: "seq", name: "Sequential walk",
+      note: "Reads 64 ints in order. Each 16-byte line misses once, then the next three reads hit: spatial locality.",
+      text: gen((e) => { for (let a = 0; a < 0x100; a += 4) e("R", a); }) },
+    { id: "conflict", name: "Three lines, one set",
+      note: "0x000, 0x080 and 0x100 all map to set 0, but a 2-way set holds two. Every miss after the first three is a conflict miss. Try 4 ways.",
+      text: gen((e) => { for (let r = 0; r < 8; r++) for (const a of [0x000, 0x080, 0x100]) e("R", a); }) },
+    { id: "loop", name: "Loop larger than the cache",
+      note: "Cycles over 384 bytes with a 256-byte cache. LRU always evicts the line needed next, so every access misses. Compare Random and OPT.",
+      text: gen((e) => { for (let r = 0; r < 3; r++) for (let a = 0; a < 0x180; a += 16) e("R", a); }) },
+    { id: "hot", name: "Hot data plus a scan",
+      note: "Eight hot lines are reused while a stream of one-time lines passes through. SRRIP protects the hot lines; LRU lets the scan flush them.",
+      text: gen((e) => { for (let r = 0; r < 6; r++) { for (let k = 0; k < 2; k++) for (let a = 0; a < 0x80; a += 16) e("R", a); for (let a = 0; a < 0x100; a += 16) e("R", 0x200 + r * 0x100 + a); } }) },
+    { id: "writes", name: "Writes and dirty lines",
+      note: "Stores mark lines dirty under write-back; evicting them costs a write to memory. Switch to write-through or turn off allocation to compare.",
+      text: gen((e) => { for (let a = 0; a < 0x80; a += 16) e("W", a); for (let a = 0; a < 0x80; a += 16) e("R", 0x100 + a); for (let a = 0; a < 0x80; a += 16) e("R", 0x200 + a); for (let a = 0; a < 0x80; a += 16) e("W", 0x104 + a); for (let a = 0; a < 0x80; a += 16) e("R", a); }) },
+    { id: "matrix", name: "Matrix by rows, then by columns",
+      note: "An 8 x 16 int matrix read row by row (one miss per line), then column by column: each step jumps 64 bytes and lands in the same two sets.",
+      text: gen((e) => { const b = 0x400; for (let i = 0; i < 8; i++) for (let j = 0; j < 16; j++) e("R", b + (i * 16 + j) * 4); for (let j = 0; j < 16; j++) for (let i = 0; i < 8; i++) e("R", b + (i * 16 + j) * 4); }) },
+    { id: "custom", name: "Your own trace", note: "Paste a trace below and load it.", text: "R 0x000\nR 0x040\nW 0x080 4\nR 0x000\nR 0x0C0\nR 0x100\nR 0x040" },
+  ];
+
+  // ---- state ----
+  let accesses = [], stream = [], next = null, model = null, pos = 0, history = [], timer = null, cfgError = null;
+  let addrBits = 12;
+
+  function readConfig() {
+    return {
+      size: Number($("size").value), block: Number($("block").value),
+      assoc: $("assoc").value === "full" ? "full" : Number($("assoc").value),
+      policy: $("policy").value, writeBack: $("write").value === "wb", writeAllocate: $("alloc").checked, seed: 42,
+    };
+  }
+
+  function rebuild() {
+    stop();
+    cfgError = null;
+    try {
+      model = new CacheSim.CacheModel(readConfig());
+    } catch (e) {
+      model = null;
+      cfgError = e.message;
+    }
+    stream = model ? CacheSim.lineStream(accesses, model.cfg.block) : [];
+    next = model && model.cfg.policy === "OPT" ? CacheSim.nextUses(stream) : null;
+    const maxAddr = accesses.reduce((m, a) => Math.max(m, a.addr + a.size - 1), 0);
+    addrBits = Math.max(8, Math.ceil(Math.log2(maxAddr + 1) / 4) * 4);
+    pos = 0;
+    history = [];
+    render(null);
+  }
+
+  // Re-simulate from the start up to `target` (used by Back; traces are small).
+  function seek(target) {
+    const keep = Math.max(0, Math.min(target, stream.length));
+    try { model = new CacheSim.CacheModel(readConfig()); } catch (e) { return; }
+    history = [];
+    let ev = null;
+    for (pos = 0; pos < keep; pos++) { ev = model.access(stream[pos].block, stream[pos].isWrite, next ? next[pos] : Infinity); history.push(ev); }
+    render(ev);
+  }
+
+  function step() {
+    if (!model || pos >= stream.length) { stop(); return; }
+    const ev = model.access(stream[pos].block, stream[pos].isWrite, next ? next[pos] : Infinity);
+    history.push(ev);
+    pos++;
+    render(ev);
+    if (pos >= stream.length) stop();
+  }
+
+  function play() {
+    if (timer) { stop(); return; }
+    if (pos >= stream.length) seek(0);
+    $("play").textContent = "Pause";
+    const tick = () => { step(); if (timer) timer = setTimeout(tick, 1000 / Number($("speed").value)); };
+    timer = setTimeout(tick, 0);
+  }
+  function stop() { if (timer) clearTimeout(timer); timer = null; $("play").textContent = "Play"; }
+
+  // ---- rendering ----
+  function policyMeta(cell, ev) {
+    const p = model.cfg.policy;
+    if (p === "LRU") return cell.rank === 0 ? "most recent" : `age ${cell.rank}`;
+    if (p === "FIFO") return cell.rank === 0 ? "newest" : `in ${cell.rank}`;
+    if (p === "SRRIP") return `rrpv ${cell.rrpv}`;
+    if (p === "OPT") return cell.nextUse === Infinity ? "not used again" : `next at #${cell.nextUse + 1}`;
+    return "";
+  }
+
+  function renderBits(block, offsetInLine) {
+    const box = $("bits");
+    box.innerHTML = "";
+    if (!model) return;
+    const ob = model.offsetBits, ib = model.indexBits, tb = Math.max(0, addrBits - ob - ib);
+    const addr = block * model.cfg.block + offsetInLine;
+    const bin = addr.toString(2).padStart(addrBits, "0").slice(-addrBits);
+    const groups = [
+      ["g-tag", "tag", bin.slice(0, tb), hex(Math.floor(block / model.cfg.sets))],
+      ["g-index", "set", bin.slice(tb, tb + ib), String(model.setOf(block))],
+      ["g-offset", "offset", bin.slice(tb + ib), String(offsetInLine)],
+    ];
+    for (const [cls, name, bits, value] of groups) {
+      if (!bits.length) continue;
+      const g = document.createElement("div");
+      g.className = "group " + cls;
+      g.innerHTML = `<div class="cells">${[...bits].map((b) => `<span class="bit">${b}</span>`).join("")}</div>` +
+        `<div class="label">${name} <b>${value}</b> <span>(${bits.length} bit${bits.length > 1 ? "s" : ""})</span></div>`;
+      box.appendChild(g);
+    }
+  }
+
+  function explain(ev, rec) {
+    const c = model.cfg;
+    const verb = ev.isWrite ? "Write" : "Read";
+    const where = `set ${ev.set}, tag ${hex(ev.tag)}`;
+    let s = `${verb} goes to ${where}. `;
+    if (ev.hit) {
+      s += `It is in way ${ev.way}: <span class="tag-hit">hit</span>.`;
+      if (ev.isWrite) s += c.writeBack ? " The line is now dirty (write-back)." : " Write-through also sends the store to memory.";
+      return s;
+    }
+    const why = { compulsory: "first time this line is used", capacity: "a fully associative cache of this size would miss too",
+      conflict: "a fully associative cache of this size would have hit" }[ev.missType];
+    s += `Not in the set: <span class="tag-miss">${ev.missType} miss</span> (${why}). `;
+    if (!ev.filled) return s + "No-write-allocate: the store goes straight to memory and the cache does not change.";
+    if (ev.evicted) {
+      const pol = { LRU: "LRU evicts the least recently used line", FIFO: "FIFO evicts the oldest line", RANDOM: "Random picks a victim",
+        PLRU: "the PLRU tree bits point to the victim", SRRIP: "SRRIP evicts the first line with rrpv 3", OPT: "OPT evicts the line needed furthest in the future" }[c.policy];
+      s += `The set is full, so ${pol}: way ${ev.way} (tag ${hex(Math.floor(ev.evictedBlock / c.sets))})`;
+      s += ev.evictedDirty ? ", which was dirty and is written back to memory. " : ". ";
+    } else {
+      s += `Placed in empty way ${ev.way}. `;
+    }
+    s += "The line is fetched from memory";
+    if (ev.isWrite) s += c.writeBack ? " and marked dirty." : " and the store is also written through.";
+    else s += ".";
+    return s;
+  }
+
+  function render(ev) {
+    $("counter").textContent = model ? `access ${pos} of ${stream.length}` : "";
+    if (!model) {
+      $("op").textContent = "Invalid configuration";
+      $("addr").textContent = "";
+      $("bits").innerHTML = "";
+      $("explain").innerHTML = `<span class="error">${cfgError}</span> Change the size, line or ways.`;
+      $("sets").innerHTML = "";
+      $("geom").textContent = "";
+      for (const id of ["step", "back", "play", "run", "reset"]) $(id).disabled = true;
+      return;
+    }
+    for (const id of ["step", "play", "run"]) $(id).disabled = pos >= stream.length;
+    $("back").disabled = pos === 0;
+    $("reset").disabled = pos === 0;
+
+    const c = model.cfg;
+    $("geom").textContent = `${c.sets} set${c.sets > 1 ? "s" : ""} x ${c.ways} way${c.ways > 1 ? "s" : ""} x ${c.block} B lines`;
+    $("state-hint").textContent = { LRU: "age 0 is the most recent", FIFO: "in 0 is the newest", SRRIP: "rrpv 3 is evicted first",
+      OPT: "positions in this trace", PLRU: "tree bits per set", RANDOM: "victims chosen at random" }[c.policy];
+
+    if (ev) {
+      const rec = accesses[stream[pos - 1].record];
+      $("op").textContent = ev.isWrite ? "Write" : "Read";
+      $("addr").textContent = hex(rec.addr, Math.ceil(addrBits / 4));
+      const off = Math.max(0, rec.addr - ev.block * c.block);
+      renderBits(ev.block, Math.min(off, c.block - 1));
+      $("explain").innerHTML = explain(ev, rec);
+    } else {
+      $("op").textContent = stream.length ? "Ready" : "No accesses";
+      $("addr").textContent = "";
+      if (stream.length) {
+        const first = stream[0];
+        renderBits(first.block, Math.max(0, accesses[first.record].addr - first.block * c.block));
+        $("explain").textContent = `The first access is shown above, split into tag, set index and offset. ${c.sets} sets need ${model.indexBits} index bit${model.indexBits === 1 ? "" : "s"}; ${c.block}-byte lines need ${model.offsetBits} offset bits. Press Step.`;
+      } else {
+        $("bits").innerHTML = "";
+        $("explain").textContent = "This trace has no data accesses.";
+      }
+    }
+
+    // cache grid
+    const sets = $("sets");
+    const frag = document.createDocumentFragment();
+    const many = c.ways > 8;
+    for (let s = 0; s < c.sets; s++) {
+      const row = document.createElement("div");
+      row.className = "set" + (ev && ev.set === s ? " active" : "");
+      const cells = model.snapshot(s).map((cell, w) => {
+        const isEv = ev && ev.set === s && ev.way === w;
+        const cls = ["way", !cell ? "empty" : "", isEv && ev.hit ? "hit" : "", isEv && ev.filled ? "filled flash" : ""].join(" ");
+        if (!cell) return `<div class="${cls}" title="way ${w}: empty"><div class="t">empty</div><div class="m">way ${w}</div></div>`;
+        const meta = policyMeta(cell, ev);
+        return `<div class="${cls}" title="way ${w}: block ${hex(cell.block * c.block)}${cell.dirty ? ", dirty" : ""}">` +
+          `<div class="t"><span>${hex(cell.tag)}</span>${cell.dirty ? '<span class="dirty" aria-label="dirty">D</span>' : ""}</div>` +
+          `<div class="m">way ${w}</div>${meta ? `<div class="m">${meta}</div>` : ""}</div>`;
+      }).join("");
+      const tree = c.policy === "PLRU" && c.ways > 1 ? `<div class="tree">tree bits <b>${model.plruBits(s)}</b> (1 = victim on the right)</div>` : "";
+      row.innerHTML = `<div class="set-id">${s}</div><div class="set-body"><div class="ways${many ? " many" : ""}" style="--ways:${c.ways}">${cells}</div>${tree}</div>`;
+      frag.appendChild(row);
+    }
+    sets.innerHTML = "";
+    sets.appendChild(frag);
+    const active = sets.querySelector(".set.active");
+    if (active && timer === null) active.scrollIntoView({ block: "nearest" });
+
+    // stats
+    const st = model.stats, acc = st.reads + st.writes, miss = st.readMisses + st.writeMisses;
+    $("s-acc").textContent = acc;
+    $("s-hits").textContent = acc - miss;
+    $("s-miss").textContent = miss;
+    $("s-rate").textContent = acc ? ((100 * (acc - miss)) / acc).toFixed(1) + "%" : "-";
+    $("s-wb").textContent = st.writebacks;
+    $("s-mr").textContent = st.memReads;
+    $("s-mw").textContent = st.memWrites;
+    $("s-comp").textContent = st.compulsory;
+    $("s-cap").textContent = st.capacity;
+    $("s-conf").textContent = st.conflict;
+    const bar = $("threec");
+    bar.innerHTML = miss ? [["compulsory", st.compulsory], ["capacity", st.capacity], ["conflict", st.conflict]]
+      .filter(([, v]) => v > 0)
+      .map(([k, v]) => `<span style="flex:${v};background:var(--c-${k})" title="${k}: ${v}"></span>`).join("") : "";
+    bar.setAttribute("aria-label", `Misses: ${st.compulsory} compulsory, ${st.capacity} capacity, ${st.conflict} conflict`);
+
+    // log (newest first, last 40)
+    const log = $("log");
+    const start = Math.max(0, history.length - 40);
+    let html = "";
+    for (let i = history.length - 1; i >= start; i--) {
+      const e = history[i];
+      const rec = accesses[stream[i].record];
+      const res = e.hit ? `<span class="r-hit">hit</span>` : `<span class="r-miss">${e.missType}</span>`;
+      html += `<li><span class="i">${i + 1}</span><span class="a">${e.isWrite ? "W" : "R"} ${hex(rec.addr, Math.ceil(addrBits / 4))}</span>${res}</li>`;
+    }
+    log.innerHTML = html;
+    log.setAttribute("start", String(history.length));
+    $("log-empty").style.display = history.length ? "none" : "block";
+  }
+
+  // ---- wiring ----
+  function loadText(text) {
+    try {
+      accesses = CacheSim.parseTrace(text);
+      rebuild();
+    } catch (e) {
+      $("explain").innerHTML = `<span class="error">Could not read the trace: ${e.message}.</span>`;
+    }
+  }
+  function choosePreset(id) {
+    const p = PRESETS.find((x) => x.id === id) || PRESETS[0];
+    $("preset-note").textContent = p.note;
+    $("custom").classList.toggle("open", p.id === "custom");
+    if (p.id === "custom" && !$("custom-text").value) $("custom-text").value = p.text;
+    loadText(p.id === "custom" ? $("custom-text").value : p.text);
+  }
+
+  for (const p of PRESETS) {
+    const o = document.createElement("option");
+    o.value = p.id;
+    o.textContent = p.name;
+    $("preset").appendChild(o);
+  }
+  $("preset").addEventListener("change", (e) => choosePreset(e.target.value));
+  $("load-custom").addEventListener("click", () => loadText($("custom-text").value));
+  for (const id of ["size", "block", "assoc", "policy", "write", "alloc"]) $(id).addEventListener("change", rebuild);
+  $("step").addEventListener("click", () => { stop(); step(); });
+  $("back").addEventListener("click", () => { stop(); seek(pos - 1); });
+  $("reset").addEventListener("click", () => { stop(); seek(0); });
+  $("play").addEventListener("click", play);
+  $("run").addEventListener("click", () => { stop(); seek(stream.length); });
+  document.addEventListener("keydown", (e) => {
+    const tag = (e.target && e.target.tagName) || "";
+    if (tag === "TEXTAREA" || tag === "SELECT" || tag === "INPUT") return;
+    if (e.key === "ArrowRight") { e.preventDefault(); stop(); step(); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); stop(); seek(pos - 1); }
+    else if (e.key === " " && tag !== "BUTTON") { e.preventDefault(); play(); }
+  });
+
+  // Allow deep links like index.html#trace=loop&policy=OPT&assoc=full
+  const params = new URLSearchParams(location.hash.slice(1));
+  for (const [k, id] of [["size", "size"], ["block", "block"], ["assoc", "assoc"], ["policy", "policy"], ["write", "write"]]) {
+    if (params.has(k)) $(id).value = params.get(k);
+  }
+  if (params.get("allocate") === "no") $("alloc").checked = false;
+  $("preset").value = params.get("trace") || "loop";
+  choosePreset($("preset").value);
+})();
+</script>
+</body>
+</html>

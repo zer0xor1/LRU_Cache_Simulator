@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="328" viewBox="0 0 760 328" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<title id="t">Why the real program misses: the 3C breakdown (8 KiB, LRU)</title><desc id="d">Stacked bars of compulsory, capacity and conflict misses for a real Valgrind trace at associativity 1 to fully associative. Conflict misses dominate until the cache is fully associative. Data in docs/data/three_c_sum_matrix.csv.</desc>
+<rect width="760" height="328" rx="10" fill="#fcfcfb"/>
+<text x="24.0" y="32.0" font-size="15" fill="#0b0b0b" text-anchor="start" font-weight="600" >Why the real program misses: the 3C breakdown (8 KiB, LRU)</text>
+<text x="24.0" y="52.0" font-size="12" fill="#52514e" text-anchor="start" font-weight="400" >Walking a 128x128 matrix by column jumps 1 KiB per step and hits only a few sets.</text>
+<rect x="24" y="68" width="12" height="12" rx="3" fill="#2a78d6"/>
+<text x="42.0" y="78.0" font-size="12" fill="#52514e" text-anchor="start" font-weight="400" >compulsory</text>
+<rect x="120" y="68" width="12" height="12" rx="3" fill="#eb6834"/>
+<text x="138.0" y="78.0" font-size="12" fill="#52514e" text-anchor="start" font-weight="400" >capacity</text>
+<rect x="202" y="68" width="12" height="12" rx="3" fill="#1baf7a"/>
+<text x="220.0" y="78.0" font-size="12" fill="#52514e" text-anchor="start" font-weight="400" >conflict</text>
+<line x1="104.0" y1="90.0" x2="104.0" y2="280.0" stroke="#e8e7e1" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="104.0" y="300.0" font-size="11" fill="#6f6d68" text-anchor="middle" font-weight="400" >0%</text>
+<line x1="217.2" y1="90.0" x2="217.2" y2="280.0" stroke="#e8e7e1" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="217.2" y="300.0" font-size="11" fill="#6f6d68" text-anchor="middle" font-weight="400" >5%</text>
+<line x1="330.4" y1="90.0" x2="330.4" y2="280.0" stroke="#e8e7e1" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="330.4" y="300.0" font-size="11" fill="#6f6d68" text-anchor="middle" font-weight="400" >10%</text>
+<line x1="443.6" y1="90.0" x2="443.6" y2="280.0" stroke="#e8e7e1" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="443.6" y="300.0" font-size="11" fill="#6f6d68" text-anchor="middle" font-weight="400" >15%</text>
+<line x1="556.8" y1="90.0" x2="556.8" y2="280.0" stroke="#e8e7e1" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="556.8" y="300.0" font-size="11" fill="#6f6d68" text-anchor="middle" font-weight="400" >20%</text>
+<line x1="670.0" y1="90.0" x2="670.0" y2="280.0" stroke="#e8e7e1" stroke-width="1.0" shape-rendering="crispEdges"/>
+<text x="670.0" y="300.0" font-size="11" fill="#6f6d68" text-anchor="middle" font-weight="400" >25%</text>
+<text x="94.0" y="110.0" font-size="12" fill="#52514e" text-anchor="end" font-weight="400" >direct</text>
+<rect x="104.0" y="96" width="66.2" height="20" fill="#2a78d6"><title>direct: compulsory 3,575 misses (3.01% of accesses)</title></rect>
+<rect x="172.2" y="96" width="92.5" height="20" fill="#eb6834"><title>direct: capacity 4,954 misses (4.17% of accesses)</title></rect>
+<path d="M266.7,96.0 H584.8 Q588.8,96.0 588.8,100.0 V112.0 Q588.8,116.0 584.8,116.0 H266.7 Z" fill="#1baf7a"><title>direct: conflict 16,893 misses (14.23% of accesses)</title></path>
+<text x="596.8" y="110.0" font-size="11" fill="#52514e" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">21.4%</text>
+<text x="94.0" y="142.0" font-size="12" fill="#52514e" text-anchor="end" font-weight="400" >2-way</text>
+<rect x="104.0" y="128" width="66.2" height="20" fill="#2a78d6"><title>2-way: compulsory 3,575 misses (3.01% of accesses)</title></rect>
+<rect x="172.2" y="128" width="93.0" height="20" fill="#eb6834"><title>2-way: capacity 4,983 misses (4.20% of accesses)</title></rect>
+<path d="M267.2,128.0 H561.7 Q565.7,128.0 565.7,132.0 V144.0 Q565.7,148.0 561.7,148.0 H267.2 Z" fill="#1baf7a"><title>2-way: conflict 15,651 misses (13.18% of accesses)</title></path>
+<text x="573.7" y="142.0" font-size="11" fill="#52514e" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">20.4%</text>
+<text x="94.0" y="174.0" font-size="12" fill="#52514e" text-anchor="end" font-weight="400" >4-way</text>
+<rect x="104.0" y="160" width="66.2" height="20" fill="#2a78d6"><title>4-way: compulsory 3,575 misses (3.01% of accesses)</title></rect>
+<rect x="172.2" y="160" width="94.1" height="20" fill="#eb6834"><title>4-way: capacity 5,037 misses (4.24% of accesses)</title></rect>
+<path d="M268.2,160.0 H548.3 Q552.3,160.0 552.3,164.0 V176.0 Q552.3,180.0 548.3,180.0 H268.2 Z" fill="#1baf7a"><title>4-way: conflict 14,894 misses (12.55% of accesses)</title></path>
+<text x="560.3" y="174.0" font-size="11" fill="#52514e" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">19.8%</text>
+<text x="94.0" y="206.0" font-size="12" fill="#52514e" text-anchor="end" font-weight="400" >8-way</text>
+<rect x="104.0" y="192" width="66.2" height="20" fill="#2a78d6"><title>8-way: compulsory 3,575 misses (3.01% of accesses)</title></rect>
+<rect x="172.2" y="192" width="94.5" height="20" fill="#eb6834"><title>8-way: capacity 5,059 misses (4.26% of accesses)</title></rect>
+<path d="M268.7,192.0 H539.6 Q543.6,192.0 543.6,196.0 V208.0 Q543.6,212.0 539.6,212.0 H268.7 Z" fill="#1baf7a"><title>8-way: conflict 14,419 misses (12.15% of accesses)</title></path>
+<text x="551.6" y="206.0" font-size="11" fill="#52514e" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">19.4%</text>
+<text x="94.0" y="238.0" font-size="12" fill="#52514e" text-anchor="end" font-weight="400" >16-way</text>
+<rect x="104.0" y="224" width="66.2" height="20" fill="#2a78d6"><title>16-way: compulsory 3,575 misses (3.01% of accesses)</title></rect>
+<rect x="172.2" y="224" width="95.0" height="20" fill="#eb6834"><title>16-way: capacity 5,085 misses (4.28% of accesses)</title></rect>
+<path d="M269.2,224.0 H539.3 Q543.3,224.0 543.3,228.0 V240.0 Q543.3,244.0 539.3,244.0 H269.2 Z" fill="#1baf7a"><title>16-way: conflict 14,373 misses (12.11% of accesses)</title></path>
+<text x="551.3" y="238.0" font-size="11" fill="#52514e" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">19.4%</text>
+<text x="94.0" y="270.0" font-size="12" fill="#52514e" text-anchor="end" font-weight="400" >fully assoc.</text>
+<rect x="104.0" y="256" width="66.2" height="20" fill="#2a78d6"><title>fully assoc.: compulsory 3,575 misses (3.01% of accesses)</title></rect>
+<path d="M172.2,256.0 H265.7 Q269.7,256.0 269.7,260.0 V272.0 Q269.7,276.0 265.7,276.0 H172.2 Z" fill="#eb6834"><title>fully assoc.: capacity 5,116 misses (4.31% of accesses)</title></path>
+<text x="277.7" y="270.0" font-size="11" fill="#52514e" text-anchor="start" font-weight="400" style="font-variant-numeric: tabular-nums">7.3%</text>
+<text x="387.0" y="320.0" font-size="11" fill="#6f6d68" text-anchor="middle" font-weight="400" >miss rate (share of all accesses)</text>
+</svg>
